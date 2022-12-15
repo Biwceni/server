@@ -36,10 +36,10 @@ app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
 
 // Estabelecendo conexão com o Banco de Dados
 const db = mysql.createPool({
-    host: 'localhost',
+    host: 'containers-us-west-166.railway.app',
     user: 'root',
-    password: '20023005',
-    database: 'services_bd'
+    password: 'TrtJ5X5oZEMoJe46MhLy',
+    database: 'railway'
 });
 
 // Função que análisa os dados de entrada de formato JSON dentro do servidor
