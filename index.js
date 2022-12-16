@@ -39,6 +39,7 @@ const db = mysql.createPool({
     host: 'containers-us-west-166.railway.app',
     user: 'root',
     password: 'TrtJ5X5oZEMoJe46MhLy',
+    port: '6646',
     database: 'railway'
 });
 
