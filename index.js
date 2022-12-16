@@ -13,7 +13,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 // Importando biblioteca para o instanciamento da sessão do usuário e a sintonização do Cookie em um formato de fácil interpretação pelo servidor e também pelo Browser
-const session = require('express-session');
+const session = require('cookie-session');
 const cookieParser = require('cookie-parser');
 
 // Importando biblioteca para gerar o Token
