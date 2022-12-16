@@ -47,7 +47,7 @@ app.use(express.json());
 
 // Estabelecendo as configurações e os parâmetros necessários para a realização das requisições entre o Fron-End e o Back-End
 app.use(cors({
-    origin: "https://site-services.netlify.app/",
+    origin: "https://site-services.netlify.app",
     methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true
 }));
