@@ -68,10 +68,10 @@ app.use(session({
     cookie: {
         secure: true,
         sameSite: "none",
-        maxAge: 1000000
+        // maxAge: 1000000
     },
     store: new MemoryStore({
-        checkPeriod: 1000000
+        // checkPeriod: 1000000
     })
 }));
 
