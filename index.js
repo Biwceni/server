@@ -66,6 +66,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        secure: true,
+        sameSite: "none",
         maxAge: 1000000
     },
     store: new MemoryStore({
