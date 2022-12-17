@@ -63,8 +63,8 @@ app.use(cookieParser());
 app.use(session({
     key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
         secure: true,
         sameSite: "none",
