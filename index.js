@@ -13,8 +13,10 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 // Importando biblioteca para o instanciamento da sessão do usuário e a sintonização do Cookie em um formato de fácil interpretação pelo servidor e também pelo Browser
-const session = require('cookie-session');
+const session = require('express-session');
 const cookieParser = require('cookie-parser');
+
+const MemoryStore = require('memorystore')(session)
 
 // Importando biblioteca para gerar o Token
 const jwt = require('jsonwebtoken');
@@ -64,9 +66,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
         maxAge: 1000000
-    }
+    },
+    store: new MemoryStore({
+        checkPeriod: 1000000
+    })
 }));
 
 // Criação da Rota de vai receber os dados do Cadastro do Front-End e manda-los para o Banco de Dados, assim deixando os dados salvos e o usuário cadastrado no sistema
