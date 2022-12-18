@@ -34,18 +34,18 @@ const path = require('path');
 const mysql = require('mysql2');
 
 // Estabelecendo as configurações e os parâmetros necessários para a realização das requisições entre o Fron-End e o Back-End
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
-    app.use(cors());
-    next();
-});
+// app.use((req, res, next) => {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
+//     app.use(cors());
+//     next();
+// });
 
-// app.use(cors({
-//     origin: "https://site-services.netlify.app",
-//     methods: ["POST", "GET", "PATCH", "DELETE"],
-//     credentials: true
-// }));
+app.use(cors({
+    origin: "*",
+    methods: ["POST", "GET", "PATCH", "DELETE"],
+    credentials: true
+}));
 
 // Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
 app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
