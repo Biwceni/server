@@ -42,7 +42,7 @@ const mysql = require('mysql2');
 // });
 
 app.use(cors({
-    origin: "https://site-services.netlify.app/*",
+    origin: "https://site-services.netlify.app/",
     methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true
 }));
