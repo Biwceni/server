@@ -69,15 +69,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Passando os parâmetros para a criação da sessão
 
 app.use(session({
-    // name: 'userId',
-    key: 'userId',
+    name: 'userId',
+    // key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
-    proxy: undefined,
+    proxy: true,
     cookie: {
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: "none",
         maxAge: 1000000
     },
