@@ -66,12 +66,11 @@ app.use(cookieParser());
 // Configurando o recebimento de dados para que mantenham um mesmo formato
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.enable('trust proxy');
-
 // Passando os parâmetros para a criação da sessão
 
 app.use(session({
-    key: 'userId',
+    name: 'userId',
+    // key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
