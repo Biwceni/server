@@ -16,7 +16,7 @@ const saltRounds = 10;
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
-const MemoryStore = require('memorystore')(session)
+// const MemoryStore = require('memorystore')(session)
 
 // Importando biblioteca para gerar o Token
 const jwt = require('jsonwebtoken');
@@ -63,14 +63,24 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
-        sameSite: "none",
-        maxAge: 1000000
+        expires: 60 * 60 * 24,
     },
-    store: new MemoryStore({
-        checkPeriod: 1000000
-    })
 }));
+
+// app.use(session({
+//     key: 'userId',
+//     secret: 'fnsdhfbssljkcsdffdsdkfn',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         secure: true,
+//         sameSite: "none",
+//         maxAge: 1000000
+//     },
+//     store: new MemoryStore({
+//         checkPeriod: 1000000
+//     })
+// }));
 
 // app.use((req, res, next) => {
 //     res.header("Access-Control-Allow-Origin", "https://site-services.netlify.app");
