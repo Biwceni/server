@@ -233,7 +233,7 @@ const verificarJWT = (req, res, next) => {
 
 // Criação da Rota para consumo de sessão, independente de qual estiver ativa, caso nenhuma das duas estiver ativa uma mensagem será disparada.
 // Antes haverá um procedimento de análise do Token, para se ter a base de que ele está corretamente estruturado ou ativo, com isso a função de análise da sessão pode seguir em diante.
-app.get("/login", verificarJWT, (req, res) => {
+app.get("/loginAuth", verificarJWT, (req, res) => {
     if (req.session.admin) {
         res.send({ authAdmin: true, admin: req.session.admin });
     }
