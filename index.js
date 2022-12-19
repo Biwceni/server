@@ -81,7 +81,7 @@ app.use(session({
         path: "/",
         httpOnly: true,
         secure: true,
-        // sameSite: "none",
+        sameSite: "none",
         maxAge: 1000000
     },
     store: new MemoryStore({
