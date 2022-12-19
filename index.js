@@ -41,41 +41,22 @@ const mysql = require('mysql2');
 //     next();
 // });
 
-app.use(cors({
-    origin: "https://site-services.netlify.app",
-    // methods: ["POST", "GET", "PATCH", "DELETE"],
-    credentials: true
-}));
-
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://site-services.netlify.app");
-    res.header("Access-Control-Allow-Headers", true);
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
-    app.use(cors());
-    next();
-});
-
-// Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
-app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
-
-// Estabelecendo conexão com o Banco de Dados
-const db = mysql.createPool({
-    host: 'containers-us-west-166.railway.app',
-    user: 'root',
-    password: 'TrtJ5X5oZEMoJe46MhLy',
-    port: '6646',
-    database: 'railway'
-});
-
 // Função que análisa os dados de entrada de formato JSON dentro do servidor
 app.use(express.json());
+
+app.use(cors({
+    origin: ["https://site-services.netlify.app"],
+    methods: ["POST", "GET", "PATCH", "DELETE"],
+    credentials: true,
+}));
+
+app.use(cookieParser());
 
 // Configurando o recebimento de dados para que mantenham um mesmo formato
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Passando os parâmetros para a criação da sessão
-app.use(cookieParser());
+
 app.use(session({
     key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
@@ -90,6 +71,27 @@ app.use(session({
         checkPeriod: 1000000
     })
 }));
+
+// app.use((req, res, next) => {
+//     res.header("Access-Control-Allow-Origin", "https://site-services.netlify.app");
+//     res.header("Access-Control-Allow-Headers", true);
+//     res.header("Access-Control-Allow-Credentials", true);
+//     res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
+//     app.use(cors());
+//     next();
+// });
+
+// Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
+app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
+
+// Estabelecendo conexão com o Banco de Dados
+const db = mysql.createPool({
+    host: 'containers-us-west-166.railway.app',
+    user: 'root',
+    password: 'TrtJ5X5oZEMoJe46MhLy',
+    port: '6646',
+    database: 'railway'
+});
 
 // Criação da Rota de vai receber os dados do Cadastro do Front-End e manda-los para o Banco de Dados, assim deixando os dados salvos e o usuário cadastrado no sistema
 app.post("/cadastro", (req, res) => {
