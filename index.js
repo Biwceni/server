@@ -47,7 +47,7 @@ const PORT = 3001;
 app.use(express.json());
 
 app.use(cors({
-    origin: ["https://site-services.netlify.app"],
+    origin: ["https://celebrated-peony-4b8226.netlify.app"],
     methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true,
 }));
