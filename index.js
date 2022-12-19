@@ -63,27 +63,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        expires: 60 * 60 * 24,
+        secure: true,
+        sameSite: "none",
+        maxAge: 1000000
     },
     store: new MemoryStore({
-        checkPeriod: 60 * 60 * 24
+        checkPeriod: 1000000
     })
 }));
-
-// app.use(session({
-//     key: 'userId',
-//     secret: 'fnsdhfbssljkcsdffdsdkfn',
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         secure: true,
-//         sameSite: "none",
-//         maxAge: 1000000
-//     },
-    // store: new MemoryStore({
-    //     checkPeriod: 1000000
-    // })
-// }));
 
 // app.use((req, res, next) => {
 //     res.header("Access-Control-Allow-Origin", "https://site-services.netlify.app");
