@@ -48,18 +48,18 @@ app.use(express.json());
 
 app.use(cors({
     origin: ["https://celebrated-peony-4b8226.netlify.app"],
-    methods: ["POST", "GET", "PATCH", "DELETE"],
+    // methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true,
 }));
 
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Origin", "https://celebrated-peony-4b8226.netlify.app");
-//     res.header("Access-Control-Allow-Headers", true);
-//     res.header("Access-Control-Allow-Credentials", true);
-//     res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
-//     app.use(cors());
-//     next();
-// });
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://celebrated-peony-4b8226.netlify.app");
+    res.header("Access-Control-Allow-Headers", true);
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
+    app.use(cors());
+    next();
+});
 
 app.use(cookieParser());
 
