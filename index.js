@@ -195,45 +195,45 @@ app.get("/confirmarSession", (req, res) => {
 });
 
 // Middleware que vai servir para analisar o Token que será recebido do Front-End
-const verificarJWT = (req, res, next) => {
-    const token = req.headers["x-acess-token"];
+// const verificarJWT = (req, res, next) => {
+//     const token = req.headers["x-acess-token"];
 
-    // Caso não houver um token ativo ou recebido
-    if (!token) {
-        req.session.destroy((error) => {
-            if (error) {
-                console.log(error)
-            } else {
-                res.clearCookie("userId");
-                res.send({ semToken: true, msg: "Não há um Token Ativo, Sessão Encerrada" });
-            }
-        });
-    // Caso houver um token ativo
-    } else {
-        // Verificar o Token para ver se estruturamente está correto
-        jwt.verify(token, 'senhaSecretJWT', (errorToken, decoded) => {
-            // Caso o Token apresente algum erro em sua estrutura, será disparado um erro e a sessão que foi ativada em conjunto ao Token, antes de ser analisado, será encerrada
-            if (errorToken) {
-                req.session.destroy((error) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        res.clearCookie("userId");
-                        res.send({ msg: "Falha ao Autenticar" });
-                    }
-                });
-            } 
-            // Caso o Token não apresente nenhum erro, então a análise foi um secesso e ele poderá seguir para a Rota em que está inserido
-            else {
-                next();
-            }
-        });
-    }
-}
+//     // Caso não houver um token ativo ou recebido
+//     if (!token) {
+//         req.session.destroy((error) => {
+//             if (error) {
+//                 console.log(error)
+//             } else {
+//                 res.clearCookie("userId");
+//                 res.send({ semToken: true, msg: "Não há um Token Ativo, Sessão Encerrada" });
+//             }
+//         });
+//     // Caso houver um token ativo
+//     } else {
+//         // Verificar o Token para ver se estruturamente está correto
+//         jwt.verify(token, 'senhaSecretJWT', (errorToken, decoded) => {
+//             // Caso o Token apresente algum erro em sua estrutura, será disparado um erro e a sessão que foi ativada em conjunto ao Token, antes de ser analisado, será encerrada
+//             if (errorToken) {
+//                 req.session.destroy((error) => {
+//                     if (error) {
+//                         console.log(error)
+//                     } else {
+//                         res.clearCookie("userId");
+//                         res.send({ msg: "Falha ao Autenticar" });
+//                     }
+//                 });
+//             } 
+//             // Caso o Token não apresente nenhum erro, então a análise foi um secesso e ele poderá seguir para a Rota em que está inserido
+//             else {
+//                 next();
+//             }
+//         });
+//     }
+// }
 
 // Criação da Rota para consumo de sessão, independente de qual estiver ativa, caso nenhuma das duas estiver ativa uma mensagem será disparada.
 // Antes haverá um procedimento de análise do Token, para se ter a base de que ele está corretamente estruturado ou ativo, com isso a função de análise da sessão pode seguir em diante.
-app.get("/loginAuth", verificarJWT, (req, res) => {
+app.get("/loginAuth", (req, res) => {
     if (req.session.admin) {
         res.send({ authAdmin: true, admin: req.session.admin });
     }
