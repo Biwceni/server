@@ -48,9 +48,18 @@ app.use(express.json());
 
 app.use(cors({
     origin: ["https://celebrated-peony-4b8226.netlify.app"],
-    methods: ["POST", "GET", "PATCH", "DELETE"],
+    // methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true,
 }));
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://celebrated-peony-4b8226.netlify.app");
+    res.header("Access-Control-Allow-Headers", true);
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
+    app.use(cors());
+    next();
+});
 
 app.use(cookieParser());
 
@@ -73,15 +82,6 @@ app.use(session({
         checkPeriod: 1000000
     })
 }));
-
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Origin", "https://site-services.netlify.app");
-//     res.header("Access-Control-Allow-Headers", true);
-//     res.header("Access-Control-Allow-Credentials", true);
-//     res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
-//     app.use(cors());
-//     next();
-// });
 
 // Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
 app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
