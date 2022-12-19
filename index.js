@@ -66,8 +66,6 @@ app.use(cookieParser());
 // Configurando o recebimento de dados para que mantenham um mesmo formato
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('trust proxy', 1);
-
 // Passando os parâmetros para a criação da sessão
 
 app.use(session({
@@ -88,6 +86,8 @@ app.use(session({
         checkPeriod: 1000000
     })
 }));
+
+app.set('trust proxy', 1);
 
 // Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
 app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
