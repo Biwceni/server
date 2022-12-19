@@ -33,6 +33,8 @@ const path = require('path');
 // Importando biblioteca para fazer a conexão com o Banco de Dados
 const mysql = require('mysql2');
 
+const PORT = 3001;
+
 // Estabelecendo as configurações e os parâmetros necessários para a realização das requisições entre o Fron-End e o Back-End
 // app.use((req, res, next) => {
 //     res.header("Access-Control-Allow-Origin", "*");
@@ -561,6 +563,6 @@ app.delete("/finalizarPedido/:userPedidoBD", (req, res) => {
 });
 
 // Configurando e ativando a porta do servidor
-app.listen(3001, () => {
-    console.log("Server on");
+app.listen(process.env.PORT || PORT, () => {
+    console.log(`Server on na Porta ${PORT}`);
 });
