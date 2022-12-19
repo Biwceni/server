@@ -16,7 +16,7 @@ const saltRounds = 10;
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
-const MemoryStore = require('memorystore')(session)
+// const MemoryStore = require('memorystore')(session)
 
 // Importando biblioteca para gerar o Token
 const jwt = require('jsonwebtoken');
@@ -81,9 +81,9 @@ app.use(session({
         sameSite: "none",
         maxAge: 1000000
     },
-    store: new MemoryStore({
-        checkPeriod: 1000000
-    })
+    // store: new MemoryStore({
+    //     checkPeriod: 1000000
+    // })
 }));
 
 // Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
