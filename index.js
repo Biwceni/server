@@ -74,13 +74,13 @@ app.use(session({
     // name: 'userId',
     // key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     proxy: true,
     cookie: {
-        httpOnly: false,
+        // httpOnly: false,
         secure: true,
-        sameSite: "none",
+        // sameSite: "none",
         maxAge: 1000000
     },
     store: new MemoryStore({
