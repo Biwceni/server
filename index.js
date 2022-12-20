@@ -78,7 +78,8 @@ app.use(session({
     saveUninitialized: false,
     // proxy: true,
     cookie: {
-        httpOnly: false,
+        domain: "https://celebrated-peony-4b8226.netlify.app",
+        // httpOnly: false,
         secure: true,
         sameSite: "none",
         maxAge: 1000000
