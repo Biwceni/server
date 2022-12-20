@@ -72,7 +72,7 @@ app.set("trust proxy", 1);
 
 app.use(session({
     name: 'userId',
-    // key: 'userId',
+    key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
