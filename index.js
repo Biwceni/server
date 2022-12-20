@@ -78,7 +78,6 @@ app.use(session({
     saveUninitialized: false,
     // proxy: true,
     cookie: {
-        path: "https://celebrated-peony-4b8226.netlify.app",
         httpOnly: true,
         secure: true,
         sameSite: "none",
