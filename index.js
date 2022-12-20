@@ -79,7 +79,7 @@ app.use(session({
     // proxy: true,
     cookie: {
         // path: "/",
-        // httpOnly: true,
+        httpOnly: true,
         secure: true,
         sameSite: "none",
         maxAge: 1000000
