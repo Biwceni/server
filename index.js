@@ -68,16 +68,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Passando os parâmetros para a criação da sessão
 
+app.set("trust proxy", 1);
+
 app.use(session({
     name: 'userId',
     // key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
-    proxy: true,
+    // proxy: true,
     cookie: {
-        path: "/",
-        httpOnly: true,
+        // path: "/",
+        // httpOnly: true,
         secure: true,
         sameSite: "none",
         maxAge: 1000000
@@ -86,8 +88,6 @@ app.use(session({
         checkPeriod: 1000000
     })
 }));
-
-app.set('trust proxy', 1);
 
 // Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
 app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
