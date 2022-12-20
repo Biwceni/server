@@ -71,18 +71,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("trust proxy", 1);
 
 app.use(session({
-    // name: 'userId',
-    key: 'userId',
+    name: 'userId',
+    // key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
     // proxy: true,
-    // cookie: {
-    //     // httpOnly: false,
-    //     secure: true,
-    //     sameSite: "none",
-    //     maxAge: 1000000
-    // },
+    cookie: {
+        // httpOnly: false,
+        secure: true,
+        sameSite: "none",
+        maxAge: 1000000
+    },
     store: new MemoryStore({
         checkPeriod: 1000000
     })
