@@ -74,7 +74,7 @@ app.use(session({
     name: 'userId',
     key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     // proxy: true,
     cookie: {
