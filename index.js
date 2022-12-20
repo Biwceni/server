@@ -78,7 +78,7 @@ app.use(session({
     saveUninitialized: false,
     // proxy: true,
     cookie: {
-        // httpOnly: false,
+        httpOnly: false,
         secure: true,
         sameSite: "none",
         maxAge: 1000000
