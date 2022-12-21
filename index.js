@@ -71,12 +71,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("trust proxy", 1);
 
 app.use(session({
-    name: 'userId',
+    // name: 'userId',
     // key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
-    proxy: true,
+    // proxy: true,
     cookie: {
         // httpOnly: false,
         secure: true,
