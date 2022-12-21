@@ -324,7 +324,7 @@ app.get("/listarItens", (req, res) => {
         if (error) {
             console.log(error);
         } else {
-            res.send({ itens: result, url: "http://localhost:3001/files/images/" });
+            res.send({ itens: result, url: "https://mysql-services-deploy-render.onrender.com/files/images/" });
         }
     });
 });
