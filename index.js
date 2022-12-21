@@ -81,10 +81,10 @@ app.use(session({
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        maxAge: 1000000
+        maxAge: 100
     },
     store: new MemoryStore({
-        checkPeriod: 1000000
+        checkPeriod: 100
     })
 }));
 
