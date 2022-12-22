@@ -288,7 +288,7 @@ app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
 
         const media = {
             mimeType: req.file.mimetype,
-            body: fs.createReadStream(req.file)
+            body: fs.createReadStream(req.file[0])
         }
 
         const responseDrive = driveService.files.create({
