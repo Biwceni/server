@@ -300,7 +300,7 @@ app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
         // return responseDrive.data.id
     }
     
-    if (!req.file) {
+    else if (!req.file) {
         return res.send({ tipoMsg: "erro", msg: "Erro no Upload" });
     }
 
