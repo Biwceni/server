@@ -272,33 +272,32 @@ app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
     
     if(req.file){
 
-        console.log(req.file);
-        // const auth = new google.auth.GoogleAuth({
-        //     keyFile: './googledrive.json',
-        //     scopes: ['https://www.googleapis.com/auth/drive']
-        // })
+        const auth = new google.auth.GoogleAuth({
+            keyFile: './googledrive.json',
+            scopes: ['https://www.googleapis.com/auth/drive']
+        })
 
-        // const driveService = google.drive({
-        //     version: 'v3',
-        //     auth
-        // })
+        const driveService = google.drive({
+            version: 'v3',
+            auth
+        })
 
-        // const fileMetaData = {
-        //     'name': req.file.filename,
-        //     'parents': [GOOGLE_API_FOLDER_ID]
-        // }
+        const fileMetaData = {
+            'name': req.file.originalname,
+            'parents': [GOOGLE_API_FOLDER_ID]
+        }
 
-        // const media = {
-        //     mimeType: req.file.mimetype,
-        //     body: fs.createReadStream(req.file[0])
-        // }
+        const media = {
+            mimeType: req.file.mimetype,
+            body: fs.createReadStream(req.file.buffer)
+        }
 
-        // const responseDrive = driveService.files.create({
-        //     resource: fileMetaData,
-        //     media: media,
-        //     fields: 'id'
-        // })
-        // console.log(responseDrive.data.id)
+        const responseDrive = driveService.files.create({
+            resource: fileMetaData,
+            media: media,
+            fields: 'id'
+        })
+        console.log(responseDrive.data.id)
         // return responseDrive.data.id
     }
     
