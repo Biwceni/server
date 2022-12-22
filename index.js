@@ -306,50 +306,50 @@ app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
     }
 
     // Recebendo os dados e recuperando apenas o nome que foi tratado da imagem
-    const image = req.file.filename;
-    const { nomeitem } = req.body;
-    const { descricao } = req.body;
-    const { valor } = req.body;
+    // const image = req.file.filename;
+    // const { nomeitem } = req.body;
+    // const { descricao } = req.body;
+    // const { valor } = req.body;
 
     // Inicialmente verificar se o item que está sendo enviado já não existe no Banco de Dados
-    let sqlVerificar = "SELECT * FROM itens WHERE nomeitem = ?;";
+    // let sqlVerificar = "SELECT * FROM itens WHERE nomeitem = ?;";
 
-    db.query(sqlVerificar, [nomeitem], (error, result) => {
-        if (error) {
-            console.log(error);
-        }
-        // Se não existir, o código segue para a inserção dos dados no Banco de Dados
-        if (result.length === 0) {
+    // db.query(sqlVerificar, [nomeitem], (error, result) => {
+    //     if (error) {
+    //         console.log(error);
+    //     }
+    //     // Se não existir, o código segue para a inserção dos dados no Banco de Dados
+    //     if (result.length === 0) {
 
-            // Com os valores recuperados, tem que haver um tratamento do valor antes de inseri-lo no Banco de Dados, isso por conta de que o formato que está chegando é em String, por conta da máscara que precisou ser feita na parte do Front-End.
-            // Para iniciar o tratamento, transformamos a String em Float, sendo esse um valor acessível ao que o Banco de Dados espera receber, após isso as marcações dos sinais tem que ser refeitas por meio do método replace, para que o valor mantenha a mesma identidade do seu original
-            const novoValor = parseFloat(valor.replace(/\D/g, "").replace(/(\d)(\d{2})$/, "$1.$2").replace(/(?=(\d{3})+(\D))\B/g, ""));
+    //         // Com os valores recuperados, tem que haver um tratamento do valor antes de inseri-lo no Banco de Dados, isso por conta de que o formato que está chegando é em String, por conta da máscara que precisou ser feita na parte do Front-End.
+    //         // Para iniciar o tratamento, transformamos a String em Float, sendo esse um valor acessível ao que o Banco de Dados espera receber, após isso as marcações dos sinais tem que ser refeitas por meio do método replace, para que o valor mantenha a mesma identidade do seu original
+    //         const novoValor = parseFloat(valor.replace(/\D/g, "").replace(/(\d)(\d{2})$/, "$1.$2").replace(/(?=(\d{3})+(\D))\B/g, ""));
 
-            // Com o tratamento devidamente feito, agora inserimos os dados no Banco de Dados
-            let sqlAdicionar = "INSERT INTO itens (nomeitem, descricao, valor, image) VALUES (?, ?, ?, ?);";
+    //         // Com o tratamento devidamente feito, agora inserimos os dados no Banco de Dados
+    //         let sqlAdicionar = "INSERT INTO itens (nomeitem, descricao, valor, image) VALUES (?, ?, ?, ?);";
 
-            db.query(sqlAdicionar, [nomeitem, descricao, novoValor, image], (err, response) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    res.send({ tipoMsg: "correto", msg: "Item Adicionado" });
-                }
-            });
-        // Caso existir o item no Banco de Dados, então ele não será gravado            
-        } else {
+    //         db.query(sqlAdicionar, [nomeitem, descricao, novoValor, image], (err, response) => {
+    //             if (err) {
+    //                 console.log(err)
+    //             } else {
+    //                 res.send({ tipoMsg: "correto", msg: "Item Adicionado" });
+    //             }
+    //         });
+    //     // Caso existir o item no Banco de Dados, então ele não será gravado            
+    //     } else {
 
-            // A função fs.unlink vai servir para excluir a imagem salva no servidor daquele item inválido, isso porque mesmo que o item não passe pela verificação, a sua imagem enviada ainda sim é salva no servidor, então para evitar um acúmulo de imagens desnecessárias é utilizado esse função para apagar a imagem em específico
-            const file = `./public/upload/images/${image}`;
+    //         // A função fs.unlink vai servir para excluir a imagem salva no servidor daquele item inválido, isso porque mesmo que o item não passe pela verificação, a sua imagem enviada ainda sim é salva no servidor, então para evitar um acúmulo de imagens desnecessárias é utilizado esse função para apagar a imagem em específico
+    //         const file = `./public/upload/images/${image}`;
 
-            fs.unlink(file, (errorFile) => {
-                if (errorFile) {
-                    console.log(errorFile);
-                } else {
-                    res.send({ tipoMsg: "erro", msg: "Item já Adicionado" });
-                }
-            });
-        }
-    });
+    //         fs.unlink(file, (errorFile) => {
+    //             if (errorFile) {
+    //                 console.log(errorFile);
+    //             } else {
+    //                 res.send({ tipoMsg: "erro", msg: "Item já Adicionado" });
+    //             }
+    //         });
+    //     }
+    // });
 });
 
 // Criação da Rota para a listagem dos itens que foram salvos no Banco de Dados
