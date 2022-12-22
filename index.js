@@ -33,6 +33,10 @@ const path = require('path');
 // Importando biblioteca para fazer a conexão com o Banco de Dados
 const mysql = require('mysql2');
 
+const GOOGLE_API_FOLDER_ID = '14hlj7OEmep3ZONWrzmCKqQmPhn2s1gTK';
+
+const { google } = require('googleapis');
+
 const PORT = 3001;
 
 // Estabelecendo as configurações e os parâmetros necessários para a realização das requisições entre o Fron-End e o Back-End
@@ -265,6 +269,37 @@ app.get("/logout", (req, res) => {
 // Criação da Rota que vai servir para adicionar os itens ao Banco de Dados, inicialmente os dados da imagem são tratados no middleware antes de serem salvos no servidor, para ver se estão aptos ou não, com base nas diretivas estabelecidas no mesmo
 app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
     // Caso o Middleware devolva uma resposta negativa no tratamento da imagem, uma mensagem será disparada e o restante do código não será executado
+    
+    if(req.file){
+        const auth = new google.auth.GoogleAuth({
+            keyFile: './googledrive.json',
+            scopes: ['https://www.googleapis.com/auth/drive']
+        })
+
+        const driveService = google.drive({
+            version: 'v3',
+            auth
+        })
+
+        const fileMetaData = {
+            'name': req.file.filename,
+            'parents': [GOOGLE_API_FOLDER_ID]
+        }
+
+        const media = {
+            mimeType: req.file.mimetype,
+            body: fs.createReadStream(req.file)
+        }
+
+        const responseDrive = driveService.files.create({
+            resource: fileMetaData,
+            media: media,
+            fields: 'id'
+        })
+        console.log(responseDrive.data.id)
+        // return responseDrive.data.id
+    }
+    
     if (!req.file) {
         return res.send({ tipoMsg: "erro", msg: "Erro no Upload" });
     }
