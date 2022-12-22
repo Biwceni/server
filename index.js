@@ -271,32 +271,34 @@ app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
     // Caso o Middleware devolva uma resposta negativa no tratamento da imagem, uma mensagem será disparada e o restante do código não será executado
     
     if(req.file){
-        const auth = new google.auth.GoogleAuth({
-            keyFile: './googledrive.json',
-            scopes: ['https://www.googleapis.com/auth/drive']
-        })
 
-        const driveService = google.drive({
-            version: 'v3',
-            auth
-        })
+        console.log(req.file);
+        // const auth = new google.auth.GoogleAuth({
+        //     keyFile: './googledrive.json',
+        //     scopes: ['https://www.googleapis.com/auth/drive']
+        // })
 
-        const fileMetaData = {
-            'name': req.file.filename,
-            'parents': [GOOGLE_API_FOLDER_ID]
-        }
+        // const driveService = google.drive({
+        //     version: 'v3',
+        //     auth
+        // })
 
-        const media = {
-            mimeType: req.file.mimetype,
-            body: fs.createReadStream(req.file[0])
-        }
+        // const fileMetaData = {
+        //     'name': req.file.filename,
+        //     'parents': [GOOGLE_API_FOLDER_ID]
+        // }
 
-        const responseDrive = driveService.files.create({
-            resource: fileMetaData,
-            media: media,
-            fields: 'id'
-        })
-        console.log(responseDrive.data.id)
+        // const media = {
+        //     mimeType: req.file.mimetype,
+        //     body: fs.createReadStream(req.file[0])
+        // }
+
+        // const responseDrive = driveService.files.create({
+        //     resource: fileMetaData,
+        //     media: media,
+        //     fields: 'id'
+        // })
+        // console.log(responseDrive.data.id)
         // return responseDrive.data.id
     }
     
