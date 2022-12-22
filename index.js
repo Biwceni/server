@@ -283,13 +283,13 @@ app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
         })
 
         const fileMetaData = {
-            'name': req.file.originalname,
+            'name': req.file.filename,
             'parents': [GOOGLE_API_FOLDER_ID]
         }
 
         const media = {
             mimeType: req.file.mimetype,
-            body: fs.createReadStream(req.file.buffer)
+            body: fs.createReadStream(req.file.path)
         }
 
         const responseDrive = driveService.files.create({
