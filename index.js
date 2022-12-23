@@ -392,11 +392,11 @@ app.get("/listarItemEditar/:iditens", (req, res) => {
 });
 
 // Criação da Rota para poder editar os dados de um item em específico
-app.patch("/editarItens/:iditens", uploadImage.single("image"), (req, res) => {
+app.patch("/editarItens/:iditens", uploadImage.single("image"), uploadFile, (req, res) => {
 
     // Recuperando o userpedido por meio do parâmetro instanciado na rota
     const { iditens } = req.params;
-    const image = req.file ? req.file.filename : '';
+    const image = req.file ? req.dataUploadFile : '';
     const { nomeitem } = req.body;
     const { descricao } = req.body;
     const { valor } = req.body;
@@ -412,12 +412,14 @@ app.patch("/editarItens/:iditens", uploadImage.single("image"), (req, res) => {
         // Caso houver uma imagem que está sendo recebida
         else if (image.length > 0) {
             // A imagem que está salva no servidor desse item em específico vai ser excluida, para que essa nova imagem que foi salva tome o seu lugar
-            let fileAtual = `./public/upload/images/${result[0].image}`;
+            // let fileAtual = `./public/upload/images/${result[0].image}`;
 
-            fs.unlink(fileAtual, (errorFile) => {
-                if (errorFile) {
-                    console.log(errorFile);
-                } else {
+            // fs.unlink(fileAtual, (errorFile) => {
+            //     if (errorFile) {
+            //         console.log(errorFile);
+            //     } else {
+
+            deleteFile(result[0].image)
 
                     // Com os valores recuperados, tem que haver um tratamento do valor antes de inseri-lo no Banco de Dados, isso por conta de que o formato que está chegando é em String, por conta da máscara que precisou ser feita na parte do Front-End.
                     // Para iniciar o tratamento transformamos a String em Float, sendo esse um valor acessível ao que o Banco de Dados espera receber, após isso as marcações dos sinais tem que ser refeitas por meio do método replace, para que o valor mantenha a mesma identidade do seu original
@@ -433,8 +435,8 @@ app.patch("/editarItens/:iditens", uploadImage.single("image"), (req, res) => {
                             res.send({ tipoMsg: "correto", msg: "Dados Atualizados com Sucesso" });
                         }
                     });
-                }
-            })
+                
+            
         // Caso não houver uma imagem enviada
         } else {
             // Para não enviar uma string vazia, então se mantem o mesmo nome da imagem que já está no Banco de Dados
