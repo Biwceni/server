@@ -299,6 +299,12 @@ async function uploadFile(req, res, next){
     next();
 }
 
+async function deleteFile(idFile){
+    const responseDelete = await driveService.files.delete({
+        fileId: idFile
+    });
+}
+
 // Criação da Rota que vai servir para adicionar os itens ao Banco de Dados, inicialmente os dados da imagem são tratados no middleware antes de serem salvos no servidor, para ver se estão aptos ou não, com base nas diretivas estabelecidas no mesmo
 app.post("/adicionarItens", uploadImage.single('image'), uploadFile, (req, res) => {
     // Caso o Middleware devolva uma resposta negativa no tratamento da imagem, uma mensagem será disparada e o restante do código não será executado
@@ -340,15 +346,17 @@ app.post("/adicionarItens", uploadImage.single('image'), uploadFile, (req, res) 
         } else {
 
             // A função fs.unlink vai servir para excluir a imagem salva no servidor daquele item inválido, isso porque mesmo que o item não passe pela verificação, a sua imagem enviada ainda sim é salva no servidor, então para evitar um acúmulo de imagens desnecessárias é utilizado esse função para apagar a imagem em específico
-            const file = `https://drive.google.com/uc?export=view&id=${image}`;
+            // const file = `https://drive.google.com/uc?export=view&id=${image}`;
 
-            fs.unlink(file, (errorFile) => {
-                if (errorFile) {
-                    console.log(errorFile);
-                } else {
-                    res.send({ tipoMsg: "erro", msg: "Item já Adicionado" });
-                }
-            });
+            // fs.unlink(file, (errorFile) => {
+            //     if (errorFile) {
+            //         console.log(errorFile);
+            //     } else {
+            //         res.send({ tipoMsg: "erro", msg: "Item já Adicionado" });
+            //     }
+            // });
+            deleteFile(req.dataUploadFile);
+            res.send({ tipoMsg: "erro", msg: "Item já Adicionado" });
         }
     });
 });
