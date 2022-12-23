@@ -266,17 +266,17 @@ app.get("/logout", (req, res) => {
     });
 });
 
-async function uploadFile(req, res, next){
+const auth = new google.auth.GoogleAuth({
+    keyFile: './googledrive.json',
+    scopes: ['https://www.googleapis.com/auth/drive']
+})
 
-    const auth = new google.auth.GoogleAuth({
-        keyFile: './googledrive.json',
-        scopes: ['https://www.googleapis.com/auth/drive']
-    })
-    
-    const driveService = google.drive({
-        version: 'v3',
-        auth
-    })
+const driveService = google.drive({
+    version: 'v3',
+    auth
+})
+
+async function uploadFile(req, res, next){
 
     const fileMetaData = {
         'name': req.file.filename,
