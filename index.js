@@ -491,12 +491,15 @@ app.delete("/deletaritens/:iditens", (req, res) => {
                     // Se houver um ou vários pedidos com o mesmo nome do item
                     if (verificarPedido) {
                         // Inicialmente vai ser feita a exclusão da imagem daquele item em específico do servidor
-                        const fileLocal = `./public/upload/images/${result[0].image}`;
+                        // const fileLocal = `./public/upload/images/${result[0].image}`;
 
-                        fs.unlink(fileLocal, (errorFile) => {
-                            if (errorFile) {
-                                console.log(errorFile)
-                            } else {
+                        // fs.unlink(fileLocal, (errorFile) => {
+                        //     if (errorFile) {
+                        //         console.log(errorFile)
+                        //     } else {
+
+                        deleteFile(result[0].image)
+
                                 // Depois o item vai ser deletado no Banco de Dados
                                 let sqlDelete = "DELETE FROM itens WHERE iditens = ?;";
 
@@ -519,17 +522,19 @@ app.delete("/deletaritens/:iditens", (req, res) => {
                                         });
                                     }
                                 });
-                            }
-                        });
+                        
                     }
                     // Se não houver um ou vários pedidos com o mesmo nome do item, ele vai fazer a exclusão apenas daquele determinado item
                     else {
-                        const fileLocal = `./public/upload/images/${result[0].image}`;
+                        // const fileLocal = `./public/upload/images/${result[0].image}`;
 
-                        fs.unlink(fileLocal, (errorFile) => {
-                            if (errorFile) {
-                                console.log(errorFile)
-                            } else {
+                        // fs.unlink(fileLocal, (errorFile) => {
+                        //     if (errorFile) {
+                        //         console.log(errorFile)
+                        //     } else {
+
+                        deleteFile(result[0].image)
+
                                 let sqlDelete = "DELETE FROM itens WHERE iditens = ?;";
 
                                 db.query(sqlDelete, [iditens], (errorBase, response) => {
@@ -539,8 +544,8 @@ app.delete("/deletaritens/:iditens", (req, res) => {
                                         res.send({ msg: "Item Excluido com Sucesso" });
                                     }
                                 });
-                            }
-                        });
+                            
+                        
                     }
                 }
             });
