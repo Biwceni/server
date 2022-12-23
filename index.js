@@ -266,42 +266,72 @@ app.get("/logout", (req, res) => {
     });
 });
 
+async function uploadFile(req, res, next){
+    const auth = new google.auth.GoogleAuth({
+        keyFile: './googledrive.json',
+        scopes: ['https://www.googleapis.com/auth/drive']
+    })
+
+    const driveService = google.drive({
+        version: 'v3',
+        auth
+    })
+
+    const fileMetaData = {
+        'name': req.file.filename,
+        'parents': [GOOGLE_API_FOLDER_ID]
+    }
+
+    const media = {
+        mimeType: req.file.mimetype,
+        body: fs.createReadStream(req.file.path)
+    }
+
+    const responseDrive = await driveService.files.create({
+        resource: fileMetaData,
+        media: media,
+        fields: 'id'
+    })
+    console.log(responseDrive)
+    next();
+}
+
 // Criação da Rota que vai servir para adicionar os itens ao Banco de Dados, inicialmente os dados da imagem são tratados no middleware antes de serem salvos no servidor, para ver se estão aptos ou não, com base nas diretivas estabelecidas no mesmo
-app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
+app.post("/adicionarItens", uploadImage.single('image'), uploadFile, (req, res) => {
     // Caso o Middleware devolva uma resposta negativa no tratamento da imagem, uma mensagem será disparada e o restante do código não será executado
     
-    if(req.file){
+    // if(req.file){
 
-        const auth = new google.auth.GoogleAuth({
-            keyFile: './googledrive.json',
-            scopes: ['https://www.googleapis.com/auth/drive']
-        })
+    //     const auth = new google.auth.GoogleAuth({
+    //         keyFile: './googledrive.json',
+    //         scopes: ['https://www.googleapis.com/auth/drive']
+    //     })
 
-        const driveService = google.drive({
-            version: 'v3',
-            auth
-        })
+    //     const driveService = google.drive({
+    //         version: 'v3',
+    //         auth
+    //     })
 
-        const fileMetaData = {
-            'name': req.file.filename,
-            'parents': [GOOGLE_API_FOLDER_ID]
-        }
+    //     const fileMetaData = {
+    //         'name': req.file.filename,
+    //         'parents': [GOOGLE_API_FOLDER_ID]
+    //     }
 
-        const media = {
-            mimeType: req.file.mimetype,
-            body: fs.createReadStream(req.file.path)
-        }
+    //     const media = {
+    //         mimeType: req.file.mimetype,
+    //         body: fs.createReadStream(req.file.path)
+    //     }
 
-        const responseDrive = driveService.files.create({
-            resource: fileMetaData,
-            media: media,
-            fields: 'id'
-        })
-        console.log(responseDrive)
-        // return responseDrive.data.id
-    }
+    //     const responseDrive = driveService.files.create({
+    //         resource: fileMetaData,
+    //         media: media,
+    //         fields: 'id'
+    //     })
+    //     console.log(responseDrive)
+    //     // return responseDrive.data.id
+    // }
     
-    else if (!req.file) {
+    if (!req.file) {
         return res.send({ tipoMsg: "erro", msg: "Erro no Upload" });
     }
 
