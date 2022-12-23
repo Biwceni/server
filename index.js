@@ -68,7 +68,7 @@ app.use(cors({
 app.use(cookieParser());
 
 // Configurando o recebimento de dados para que mantenham um mesmo formato
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Passando os parâmetros para a criação da sessão
 
