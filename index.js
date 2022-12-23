@@ -278,25 +278,29 @@ const driveService = google.drive({
 
 async function uploadFile(req, res, next){
 
-    const fileMetaData = {
-        'name': req.file.filename,
-        'parents': [GOOGLE_API_FOLDER_ID]
+    if(req.file){
+        const fileMetaData = {
+            'name': req.file.filename,
+            'parents': [GOOGLE_API_FOLDER_ID]
+        }
+    
+        const media = {
+            mimeType: req.file.mimetype,
+            body: fs.createReadStream(req.file.path)
+        }
+    
+        const responseDrive = await driveService.files.create({
+            resource: fileMetaData,
+            media: media,
+            fields: 'id'
+        })
+    
+        req.dataUploadFile = responseDrive.data.id;
+    
+        next();
+    } else{
+        next();
     }
-
-    const media = {
-        mimeType: req.file.mimetype,
-        body: fs.createReadStream(req.file.path)
-    }
-
-    const responseDrive = await driveService.files.create({
-        resource: fileMetaData,
-        media: media,
-        fields: 'id'
-    })
-
-    req.dataUploadFile = responseDrive.data.id;
-
-    next();
 }
 
 async function deleteFile(idFile){
