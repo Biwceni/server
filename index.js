@@ -297,7 +297,7 @@ app.post("/adicionarItens", uploadImage.single('image'), (req, res) => {
             media: media,
             fields: 'id'
         })
-        console.log(responseDrive.data.id)
+        console.log(responseDrive)
         // return responseDrive.data.id
     }
     
