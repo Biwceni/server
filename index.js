@@ -292,7 +292,7 @@ async function uploadFile(req, res, next){
         media: media,
         fields: 'id'
     })
-    console.log(responseDrive)
+    console.log(responseDrive.data.id)
     next();
 }
 
