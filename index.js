@@ -293,9 +293,9 @@ async function uploadFile(req, res, next){
         fields: 'id'
     })
 
-    req.dataUploadFile = responseDrive;
+    req.dataUploadFile = responseDrive.data.id;
 
-    next()
+    next();
 }
 
 // Criação da Rota que vai servir para adicionar os itens ao Banco de Dados, inicialmente os dados da imagem são tratados no middleware antes de serem salvos no servidor, para ver se estão aptos ou não, com base nas diretivas estabelecidas no mesmo
