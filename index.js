@@ -266,7 +266,7 @@ app.get("/logout", (req, res) => {
     });
 });
 
-async function uploadFile(req, res, next, responseDrive){
+async function uploadFile(req, res, next){
     const auth = new google.auth.GoogleAuth({
         keyFile: './googledrive.json',
         scopes: ['https://www.googleapis.com/auth/drive']
@@ -287,21 +287,23 @@ async function uploadFile(req, res, next, responseDrive){
         body: fs.createReadStream(req.file.path)
     }
 
-    responseDrive = await driveService.files.create({
+    const responseDrive = await driveService.files.create({
         resource: fileMetaData,
         media: media,
         fields: 'id'
     })
 
+    req.dataUploadFile = responseDrive;
+
     next()
 }
 
 // Criação da Rota que vai servir para adicionar os itens ao Banco de Dados, inicialmente os dados da imagem são tratados no middleware antes de serem salvos no servidor, para ver se estão aptos ou não, com base nas diretivas estabelecidas no mesmo
-app.post("/adicionarItens", uploadImage.single('image'), uploadFile(responseDrive), (req, res) => {
+app.post("/adicionarItens", uploadImage.single('image'), uploadFile, (req, res) => {
     // Caso o Middleware devolva uma resposta negativa no tratamento da imagem, uma mensagem será disparada e o restante do código não será executado
 
     if(req.file){
-        console.log(responseDrive)
+        console.log(req.dataUploadFile);
     }
 
     // if(req.file){
