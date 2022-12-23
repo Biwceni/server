@@ -266,17 +266,18 @@ app.get("/logout", (req, res) => {
     });
 });
 
-const auth = new google.auth.GoogleAuth({
-    keyFile: './googledrive.json',
-    scopes: ['https://www.googleapis.com/auth/drive']
-})
-
-const driveService = google.drive({
-    version: 'v3',
-    auth
-})
-
 async function uploadFile(req, res, next){
+
+    const auth = new google.auth.GoogleAuth({
+        keyFile: './googledrive.json',
+        scopes: ['https://www.googleapis.com/auth/drive']
+    })
+    
+    const driveService = google.drive({
+        version: 'v3',
+        auth
+    })
+
     const fileMetaData = {
         'name': req.file.filename,
         'parents': [GOOGLE_API_FOLDER_ID]
