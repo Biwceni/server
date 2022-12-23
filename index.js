@@ -300,7 +300,7 @@ async function uploadFile(req, res, next){
 }
 
 async function deleteFile(idFile){
-    const responseDelete = await driveService.files.delete({
+    await driveService.files.delete({
         fileId: idFile
     });
 }
