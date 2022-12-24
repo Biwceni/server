@@ -14,8 +14,9 @@ const saltRounds = 10;
 
 // Importando biblioteca para o instanciamento da sessão do usuário e a sintonização do Cookie em um formato de fácil interpretação pelo servidor e também pelo Browser
 const session = require('express-session');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 
+// Importando biblioteca para evitar que armazenaento dos dados da sessão acabe estourando, com essa biblioteca os dados armazenados serão controlados
 const MemoryStore = require('memorystore')(session)
 
 // Importando biblioteca para gerar o Token
@@ -27,62 +28,59 @@ const uploadImage = require('./middlerares/uploadImage');
 // Importando biblioteca que servirá para excluir arquivos internos do servidor
 const fs = require('fs');
 
-// Importando biblioteca que vai servir para o processamento de caminhos e pastas do servidor
-const path = require('path');
+// // Importando biblioteca que vai servir para o processamento de caminhos e pastas do servidor
+// const path = require('path');
 
 // Importando biblioteca para fazer a conexão com o Banco de Dados
 const mysql = require('mysql2');
 
-const GOOGLE_API_FOLDER_ID = '14hlj7OEmep3ZONWrzmCKqQmPhn2s1gTK';
-
+// Importando biblioteca para fazer a conexão com apis do Google, como é o caso do Google Drive
 const { google } = require('googleapis');
 
-const PORT = 3001;
+// Url da pasta onde as imagens salvas serão adicionadas
+const GOOGLE_API_FOLDER_ID = '14hlj7OEmep3ZONWrzmCKqQmPhn2s1gTK';
 
-// Estabelecendo as configurações e os parâmetros necessários para a realização das requisições entre o Fron-End e o Back-End
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
-//     app.use(cors());
-//     next();
-// });
+// Realizando a autenticação com o Google Drive
+const auth = new google.auth.GoogleAuth({
+    keyFile: './googledrive.json',
+    scopes: ['https://www.googleapis.com/auth/drive']
+});
+
+// Se conectando ao Google Drive
+const driveService = google.drive({
+    version: 'v3',
+    auth
+});
+
+// Porta padrão do servidor
+const PORT = 3001;
 
 // Função que análisa os dados de entrada de formato JSON dentro do servidor
 app.use(express.json());
 
+// Estabelecendo as configurações e os parâmetros necessários para a realização das requisições entre o Fron-End e o Back-End
 app.use(cors({
     origin: ["https://celebrated-peony-4b8226.netlify.app", "https://site-services.onrender.com"],
     methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true,
 }));
 
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Origin", "https://site-services.onrender.com");
-//     res.header("Access-Control-Allow-Headers", true);
-//     res.header("Access-Control-Allow-Credentials", true);
-//     res.header("Access-Control-Allow-Methods", 'GET, POST, PATCH, DELETE');
-//     app.use(cors());
-//     next();
-// });
-
-// app.use(cookieParser());
+app.use(cookieParser());
 
 // Configurando o recebimento de dados para que mantenham um mesmo formato
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Passando os parâmetros para a criação da sessão
-
+// Sintonizando a transição entre os dados do Front-End e do Back-End, para que a conexão entre as partes e a transição entre os dados seja estabelecida
 app.set("trust proxy", 1);
 
+// Passando os parâmetros para a criação da sessão
 app.use(session({
     name: 'userId',
-    // key: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
-    // proxy: true,
     cookie: {
-        // httpOnly: true,
+        httpOnly: true,
         secure: true,
         sameSite: "none",
         maxAge: 1000000
@@ -93,7 +91,7 @@ app.use(session({
 }));
 
 // Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
-app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
+// app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
 
 // Estabelecendo conexão com o Banco de Dados
 const db = mysql.createPool({
@@ -136,7 +134,7 @@ app.post("/cadastro", (req, res) => {
                     });
                 }
             });
-        // Se o email recebido já existir, então não será cadastrado
+            // Se o email recebido já existir, então não será cadastrado
         } else {
             res.send({ cadastrado: false, tipoMsg: "erro", msg: "Email já cadastrado" });
         }
@@ -182,12 +180,12 @@ app.post("/login", (req, res) => {
                         req.session.user = result;
                         res.send({ loginUser: true, token: token, user: result });
                     }
-                // Caso a senha recebida não seja igual a que está salva no Banco de Dados, então a sessão do usuário ou do administrador não será ativa
+                    // Caso a senha recebida não seja igual a que está salva no Banco de Dados, então a sessão do usuário ou do administrador não será ativa
                 } else {
                     res.send({ tipoMsg: "erro", msg: "Email ou Senha Inválidos" });
                 }
             });
-        // Se o email não existir, então esse usuário não foi cadastrado no Banco de Dados e o Login não vai poder ser feito
+            // Se o email não existir, então esse usuário não foi cadastrado no Banco de Dados e o Login não vai poder ser feito
         } else {
             res.send({ tipoMsg: "erro", msg: "Usuário não Existe" })
         }
@@ -217,7 +215,7 @@ const verificarJWT = (req, res, next) => {
                 res.send({ semToken: true, msg: "Não há um Token Ativo, Sessão Encerrada" });
             }
         });
-    // Caso houver um token ativo
+        // Caso houver um token ativo
     } else {
         // Verificar o Token para ver se estruturamente está correto
         jwt.verify(token, 'senhaSecretJWT', (errorToken, decoded) => {
@@ -231,7 +229,7 @@ const verificarJWT = (req, res, next) => {
                         res.send({ msg: "Falha ao Autenticar" });
                     }
                 });
-            } 
+            }
             // Caso o Token não apresente nenhum erro, então a análise foi um secesso e ele poderá seguir para a Rota em que está inserido
             else {
                 next();
@@ -266,44 +264,41 @@ app.get("/logout", (req, res) => {
     });
 });
 
-const auth = new google.auth.GoogleAuth({
-    keyFile: './googledrive.json',
-    scopes: ['https://www.googleapis.com/auth/drive']
-})
+// Função para realizar a adição da imagem recebida a pasta no Google Drive
+async function uploadFile(req, res, next) {
 
-const driveService = google.drive({
-    version: 'v3',
-    auth
-})
-
-async function uploadFile(req, res, next){
-
-    if(req.file){
+    // Se uma imagem for recebida
+    if (req.file) {
+        // Nome do arquivo a ser enviado e o local que será enviado, dentro do Google Drive
         const fileMetaData = {
             'name': req.file.filename,
             'parents': [GOOGLE_API_FOLDER_ID]
         }
-    
+
+        // Os dados do arquivo, sendo o tipo do arquivo e o seu corpo a ser salvo no Google Drive
         const media = {
             mimeType: req.file.mimetype,
             body: fs.createReadStream(req.file.path)
         }
-    
+
+        // Passando os parâmetros para criação do arquivo no Google Drive, para depois receber a resposta do id daquele arquivo criado
         const responseDrive = await driveService.files.create({
             resource: fileMetaData,
             media: media,
             fields: 'id'
         })
-    
+
+        // Salvando o id do arquivo criado em uma variável, para ser usado dentro de outro Middleware
         req.dataUploadFile = responseDrive.data.id;
-    
+
         next();
-    } else{
+    } else {
         next();
     }
 }
 
-async function deleteFile(idFile){
+// Função para deletar um determinado arquivo, usando o id daquele arquivo para localizar ele e assim o excluir do Google Drive
+async function deleteFile(idFile) {
     await driveService.files.delete({
         fileId: idFile
     });
@@ -341,24 +336,14 @@ app.post("/adicionarItens", uploadImage.single('image'), uploadFile, (req, res) 
 
             db.query(sqlAdicionar, [nomeitem, descricao, novoValor, image], (err, response) => {
                 if (err) {
-                    console.log(err)
+                    console.log(err);
                 } else {
                     res.send({ tipoMsg: "correto", msg: "Item Adicionado" });
                 }
             });
-        // Caso existir o item no Banco de Dados, então ele não será gravado            
+            // Caso existir o item no Banco de Dados, então ele não será gravado            
         } else {
-
-            // A função fs.unlink vai servir para excluir a imagem salva no servidor daquele item inválido, isso porque mesmo que o item não passe pela verificação, a sua imagem enviada ainda sim é salva no servidor, então para evitar um acúmulo de imagens desnecessárias é utilizado esse função para apagar a imagem em específico
-            // const file = `https://drive.google.com/uc?export=view&id=${image}`;
-
-            // fs.unlink(file, (errorFile) => {
-            //     if (errorFile) {
-            //         console.log(errorFile);
-            //     } else {
-            //         res.send({ tipoMsg: "erro", msg: "Item já Adicionado" });
-            //     }
-            // });
+            // Acionando a função para deletar a imagem em específico, passando o id da imagem a ser excluida como parâmetro
             deleteFile(req.dataUploadFile);
             res.send({ tipoMsg: "erro", msg: "Item já Adicionado" });
         }
@@ -410,38 +395,29 @@ app.patch("/editarItens/:iditens", uploadImage.single("image"), uploadFile, (req
 
     db.query(sqlSelecionar, [iditens], (error, result) => {
         if (error) {
-            console.log(error)
+            console.log(error);
         }
         // A imagem também precisa ser tratada no servidor, para evitar inconsistência de dados.
         // Caso houver uma imagem que está sendo recebida
         else if (image.length > 0) {
             // A imagem que está salva no servidor desse item em específico vai ser excluida, para que essa nova imagem que foi salva tome o seu lugar
-            // let fileAtual = `./public/upload/images/${result[0].image}`;
+            // Acionando a função para deletar a imagem em específico, passando o id da imagem a ser excluida como parâmetro
+            deleteFile(result[0].image);
+            // Com os valores recuperados, tem que haver um tratamento do valor antes de inseri-lo no Banco de Dados, isso por conta de que o formato que está chegando é em String, por conta da máscara que precisou ser feita na parte do Front-End.
+            // Para iniciar o tratamento transformamos a String em Float, sendo esse um valor acessível ao que o Banco de Dados espera receber, após isso as marcações dos sinais tem que ser refeitas por meio do método replace, para que o valor mantenha a mesma identidade do seu original
+            const novoValor = parseFloat(valor.replace(/\D/g, "").replace(/(\d)(\d{2})$/, "$1.$2").replace(/(?=(\d{3})+(\D))\B/g, ""));
 
-            // fs.unlink(fileAtual, (errorFile) => {
-            //     if (errorFile) {
-            //         console.log(errorFile);
-            //     } else {
+            // Após o tratamento, a alteração vai ser feita nesse item em específico
+            let sqlUpdate = "UPDATE itens SET nomeitem = ?, descricao = ?, valor = ?, image = ? WHERE iditens = ?;";
 
-            deleteFile(result[0].image)
-
-                    // Com os valores recuperados, tem que haver um tratamento do valor antes de inseri-lo no Banco de Dados, isso por conta de que o formato que está chegando é em String, por conta da máscara que precisou ser feita na parte do Front-End.
-                    // Para iniciar o tratamento transformamos a String em Float, sendo esse um valor acessível ao que o Banco de Dados espera receber, após isso as marcações dos sinais tem que ser refeitas por meio do método replace, para que o valor mantenha a mesma identidade do seu original
-                    const novoValor = parseFloat(valor.replace(/\D/g, "").replace(/(\d)(\d{2})$/, "$1.$2").replace(/(?=(\d{3})+(\D))\B/g, ""));
-
-                    // Após o tratamento, a alteração vai ser feita nesse item em específico
-                    let sqlUpdate = "UPDATE itens SET nomeitem = ?, descricao = ?, valor = ?, image = ? WHERE iditens = ?;";
-
-                    db.query(sqlUpdate, [nomeitem, descricao, novoValor, image, iditens], (err, response) => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            res.send({ tipoMsg: "correto", msg: "Dados Atualizados com Sucesso" });
-                        }
-                    });
-                
-            
-        // Caso não houver uma imagem enviada
+            db.query(sqlUpdate, [nomeitem, descricao, novoValor, image, iditens], (err, response) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.send({ tipoMsg: "correto", msg: "Dados Atualizados com Sucesso" });
+                }
+            });
+            // Caso não houver uma imagem enviada
         } else {
             // Para não enviar uma string vazia, então se mantem o mesmo nome da imagem que já está no Banco de Dados
             const imageBD = result[0].image;
@@ -491,61 +467,49 @@ app.delete("/deletaritens/:iditens", (req, res) => {
                     // Se houver um ou vários pedidos com o mesmo nome do item
                     if (verificarPedido) {
                         // Inicialmente vai ser feita a exclusão da imagem daquele item em específico do servidor
-                        // const fileLocal = `./public/upload/images/${result[0].image}`;
+                        // Acionando a função para deletar a imagem em específico, passando o id da imagem a ser excluida como parâmetro
+                        deleteFile(result[0].image);
 
-                        // fs.unlink(fileLocal, (errorFile) => {
-                        //     if (errorFile) {
-                        //         console.log(errorFile)
-                        //     } else {
+                        // Depois o item vai ser deletado no Banco de Dados
+                        let sqlDelete = "DELETE FROM itens WHERE iditens = ?;";
 
-                        deleteFile(result[0].image)
+                        db.query(sqlDelete, [iditens], (errorBase, response) => {
+                            if (errorBase) {
+                                console.log(errorBase);
+                            } else {
+                                // Utilizar o nome do item como referência para poder deletar o pedido com o mesmo nome, antes da exclusão total do item
+                                const nomePedido = result[0].nomeitem;
 
-                                // Depois o item vai ser deletado no Banco de Dados
-                                let sqlDelete = "DELETE FROM itens WHERE iditens = ?;";
+                                // Passar o nome daquele pedido como forma de excluir ele por completo
+                                let sqlDeletePedido = "DELETE FROM pedidos WHERE nomepedido = ?;";
 
-                                db.query(sqlDelete, [iditens], (errorBase, response) => {
-                                    if (errorBase) {
-                                        console.log(errorBase)
-                                    } else {
-                                        // Utilizar o nome do item como referência para poder deletar o pedido com o mesmo nome, antes da exclusão total do item
-                                        const nomePedido = result[0].nomeitem;
-
-                                        // Passar o nome daquele pedido como forma de excluir ele por completo
-                                        let sqlDeletePedido = "DELETE FROM pedidos WHERE nomepedido = ?;";
-
-                                        db.query(sqlDeletePedido, [nomePedido], (errorPedido, resultPedido) => {
-                                            if (errorPedido) {
-                                                console.log(errorPedido)
-                                            } else {
-                                                res.send({ msg: "Item Excluido com Sucesso" });
-                                            }
-                                        });
-                                    }
-                                });
-                        
-                    }
-                    // Se não houver um ou vários pedidos com o mesmo nome do item, ele vai fazer a exclusão apenas daquele determinado item
-                    else {
-                        // const fileLocal = `./public/upload/images/${result[0].image}`;
-
-                        // fs.unlink(fileLocal, (errorFile) => {
-                        //     if (errorFile) {
-                        //         console.log(errorFile)
-                        //     } else {
-
-                        deleteFile(result[0].image)
-
-                                let sqlDelete = "DELETE FROM itens WHERE iditens = ?;";
-
-                                db.query(sqlDelete, [iditens], (errorBase, response) => {
-                                    if (errorBase) {
-                                        console.log(errorBase)
+                                db.query(sqlDeletePedido, [nomePedido], (errorPedido, resultPedido) => {
+                                    if (errorPedido) {
+                                        console.log(errorPedido)
                                     } else {
                                         res.send({ msg: "Item Excluido com Sucesso" });
                                     }
                                 });
-                            
-                        
+                            }
+                        });
+
+                    }
+                    // Se não houver um ou vários pedidos com o mesmo nome do item, ele vai fazer a exclusão apenas daquele determinado item
+                    else {
+                        // Acionando a função para deletar a imagem em específico, passando o id da imagem a ser excluida como parâmetro
+                        deleteFile(result[0].image);
+
+                        let sqlDelete = "DELETE FROM itens WHERE iditens = ?;";
+
+                        db.query(sqlDelete, [iditens], (errorBase, response) => {
+                            if (errorBase) {
+                                console.log(errorBase)
+                            } else {
+                                res.send({ msg: "Item Excluido com Sucesso" });
+                            }
+                        });
+
+
                     }
                 }
             });
