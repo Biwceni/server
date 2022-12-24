@@ -81,7 +81,7 @@ app.use(session({
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
-    // proxy: true,
+    proxy: true,
     cookie: {
         // httpOnly: true,
         secure: true,
