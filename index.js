@@ -72,7 +72,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Passando os parâmetros para a criação da sessão
 
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 
 app.use(session({
     name: 'userId',
@@ -80,9 +80,9 @@ app.use(session({
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
-    proxy: true,
+    // proxy: true,
     cookie: {
-        httpOnly: true,
+        // httpOnly: true,
         secure: true,
         sameSite: "none",
         maxAge: 1000000
