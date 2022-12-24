@@ -28,9 +28,6 @@ const uploadImage = require('./middlerares/uploadImage');
 // Importando biblioteca que servirá para excluir arquivos internos do servidor
 const fs = require('fs');
 
-// // Importando biblioteca que vai servir para o processamento de caminhos e pastas do servidor
-// const path = require('path');
-
 // Importando biblioteca para fazer a conexão com o Banco de Dados
 const mysql = require('mysql2');
 
@@ -65,6 +62,7 @@ app.use(cors({
     credentials: true,
 }));
 
+// Instanciamento de biblioteca que facilita a leitura e interpretação do navegador em relação aos cookies recebidos
 app.use(cookieParser());
 
 // Configurando o recebimento de dados para que mantenham um mesmo formato
@@ -89,9 +87,6 @@ app.use(session({
         checkPeriod: 1000000
     })
 }));
-
-// Função que serve para simplificar o caminho das imagens e fazer com que elas saiam do servidor e sejam visíveis para o Front-End, assim a função express.static vai fazer a ação de entregar os arquivos do servidor para a visualização do usuário
-// app.use('/files', express.static(path.resolve(__dirname, "public", "upload")));
 
 // Estabelecendo conexão com o Banco de Dados
 const db = mysql.createPool({
