@@ -73,7 +73,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Passando os parâmetros para a criação da sessão
 
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 
 app.use(session({
     name: 'userId',
