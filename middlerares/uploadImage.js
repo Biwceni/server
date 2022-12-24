@@ -24,22 +24,3 @@ module.exports = (multer({
         return cb(null, false);
     }
 }));
-
-// module.exports = (multer({
-//     // Armazenando a imagem e a nomeando
-//     storage: multer.memoryStorage(),
-//     limits: {
-//         fileSize: 5 * 1024 * 1024,
-//     },
-//     // Filtrando a imagem recebida, caso não atender a extensão correta não será armazenada
-//     fileFilter: (req, file, cb) => {
-//         const extensaoImage = ['image/png', 'image/jpg', 'image/jpeg'].find(
-//             formatoAceito => formatoAceito == file.mimetype);
-
-//         if(extensaoImage){
-//             return cb(null, true);
-//         }
-
-//         return cb(null, false);
-//     }
-// }));
