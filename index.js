@@ -68,8 +68,6 @@ app.use(cookieParser());
 // Configurando o recebimento de dados para que mantenham um mesmo formato
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set(bodyParser.json());
-
 // Sintonizando a transição entre os dados do Front-End e do Back-End, para que a conexão entre as partes e a transição entre os dados seja estabelecida
 app.set("trust proxy", 1);
 
