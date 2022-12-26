@@ -264,29 +264,34 @@ async function uploadFile(req, res, next) {
 
     // Se uma imagem for recebida
     if (req.file) {
-        // Nome do arquivo a ser enviado e o local que será enviado, dentro do Google Drive
-        const fileMetaData = {
-            'name': req.file.filename,
-            'parents': [GOOGLE_API_FOLDER_ID]
+        try {
+            // Nome do arquivo a ser enviado e o local que será enviado, dentro do Google Drive
+            const fileMetaData = {
+                'name': req.file.filename,
+                'parents': [GOOGLE_API_FOLDER_ID]
+            }
+
+            // Os dados do arquivo, sendo o tipo do arquivo e o seu corpo a ser salvo no Google Drive
+            const media = {
+                mimeType: req.file.mimetype,
+                body: fs.createReadStream(req.file.path)
+            }
+
+            // Passando os parâmetros para criação do arquivo no Google Drive, para depois receber a resposta do id daquele arquivo criado
+            const responseDrive = await driveService.files.create({
+                resource: fileMetaData,
+                media: media,
+                fields: 'id'
+            })
+
+            // Salvando o id do arquivo criado em uma variável, para ser usado dentro de outro Middleware
+            req.dataUploadFile = responseDrive.data.id;
+
+            next();
         }
-
-        // Os dados do arquivo, sendo o tipo do arquivo e o seu corpo a ser salvo no Google Drive
-        const media = {
-            mimeType: req.file.mimetype,
-            body: fs.createReadStream(req.file.path)
+        catch (errorImg) {
+            console.log(errorImg);
         }
-
-        // Passando os parâmetros para criação do arquivo no Google Drive, para depois receber a resposta do id daquele arquivo criado
-        const responseDrive = await driveService.files.create({
-            resource: fileMetaData,
-            media: media,
-            fields: 'id'
-        })
-
-        // Salvando o id do arquivo criado em uma variável, para ser usado dentro de outro Middleware
-        req.dataUploadFile = responseDrive.data.id;
-
-        next();
     } else {
         next();
     }
@@ -294,9 +299,14 @@ async function uploadFile(req, res, next) {
 
 // Função para deletar um determinado arquivo, usando o id daquele arquivo para localizar ele e assim o excluir do Google Drive
 async function deleteFile(idFile) {
-    await driveService.files.delete({
-        fileId: idFile
-    });
+    try {
+        await driveService.files.delete({
+            fileId: idFile
+        });
+    }
+    catch (errorDeleteImg) {
+        console.log(errorDeleteImg);
+    }
 }
 
 // Criação da Rota que vai servir para adicionar os itens ao Banco de Dados, inicialmente os dados da imagem são tratados no middleware antes de serem salvos no servidor, para ver se estão aptos ou não, com base nas diretivas estabelecidas no mesmo
