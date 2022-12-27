@@ -17,7 +17,7 @@ const session = require('express-session');
 // const cookieParser = require('cookie-parser');
 
 // Importando biblioteca para evitar que armazenaento dos dados da sessão acabe estourando, com essa biblioteca os dados armazenados serão controlados
-const MemoryStore = require('memorystore')(session)
+// const MemoryStore = require('memorystore')(session)
 
 // Importando biblioteca para gerar o Token
 const jwt = require('jsonwebtoken');
@@ -69,24 +69,23 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Sintonizando a transição entre os dados do Front-End e do Back-End, para que a conexão entre as partes e a transição entre os dados seja estabelecida
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 
 // Passando os parâmetros para a criação da sessão
 app.use(session({
     name: 'userId',
     secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
-    saveUninitialized: true,
-    proxy: true,
+    saveUninitialized: false,
     cookie: {
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
         sameSite: "none",
-        // maxAge: 1000000
+        maxAge: 1000000
     },
-    store: new MemoryStore({
-        checkPeriod: 1000000
-    })
+    // store: new MemoryStore({
+    //     checkPeriod: 1000000
+    // })
 }));
 
 // Estabelecendo conexão com o Banco de Dados
