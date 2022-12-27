@@ -74,13 +74,13 @@ app.set("trust proxy", 1);
 // Passando os parâmetros para a criação da sessão
 app.use(session({
     name: 'userId',
-    // secret: 'fnsdhfbssljkcsdffdsdkfn',
+    secret: 'fnsdhfbssljkcsdffdsdkfn',
     resave: false,
     saveUninitialized: false,
     cookie: {
         // httpOnly: true,
         secure: true,
-        sameSite: "none",
+        // sameSite: "none",
         maxAge: 1000000
     },
     store: new MemoryStore({
