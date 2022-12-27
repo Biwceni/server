@@ -14,7 +14,7 @@ const saltRounds = 10;
 
 // Importando biblioteca para o instanciamento da sessão do usuário e a sintonização do Cookie em um formato de fácil interpretação pelo servidor e também pelo Browser
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 
 // Importando biblioteca para evitar que armazenaento dos dados da sessão acabe estourando, com essa biblioteca os dados armazenados serão controlados
 const MemoryStore = require('memorystore')(session)
@@ -63,7 +63,7 @@ app.use(cors({
 }));
 
 // Instanciamento de biblioteca que facilita a leitura e interpretação do navegador em relação aos cookies recebidos
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // Configurando o recebimento de dados para que mantenham um mesmo formato
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -80,7 +80,7 @@ app.use(session({
     cookie: {
         // httpOnly: true,
         secure: true,
-        // sameSite: "none",
+        sameSite: "none",
         maxAge: 1000000
     },
     store: new MemoryStore({
