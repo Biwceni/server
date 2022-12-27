@@ -50,7 +50,7 @@ const driveService = google.drive({
 });
 
 // Porta padrão do servidor
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Função que análisa os dados de entrada de formato JSON dentro do servidor
 app.use(express.json());
@@ -593,6 +593,6 @@ app.delete("/finalizarPedido/:userPedidoBD", (req, res) => {
 });
 
 // Configurando e ativando a porta do servidor
-app.listen(process.env.PORT || PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server on na Porta ${PORT}`);
 });
