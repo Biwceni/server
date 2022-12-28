@@ -174,7 +174,7 @@ app.post("/login", (req, res) => {
                     } else {
                         req.session.user = result;
                         res.send({ loginUser: true, token: token, user: result });
-                        console.log(req.session);
+                        console.log(req.session.id);
                     }
                     // Caso a senha recebida não seja igual a que está salva no Banco de Dados, então a sessão do usuário ou do administrador não será ativa
                 } else {
