@@ -58,7 +58,7 @@ app.use(express.json());
 // Estabelecendo as configurações e os parâmetros necessários para a realização das requisições entre o Fron-End e o Back-End
 app.use(cors({
     origin: ["https://celebrated-peony-4b8226.netlify.app", "https://site-services.onrender.com"],
-    methods: ["POST", "GET", "PATCH", "DELETE"],
+    // methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true,
 }));
 
