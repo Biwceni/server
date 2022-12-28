@@ -78,6 +78,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        domain: 'https://site-services.onrender.com',
         httpOnly: true,
         secure: true,
         sameSite: "none",
