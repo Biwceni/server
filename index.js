@@ -70,7 +70,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Sintonizando a transição entre os dados do Front-End e do Back-End, para que a conexão entre as partes e a transição entre os dados seja estabelecida
 // app.set("trust proxy", 1);
-app.set("trust proxy", ["35.160.120.126", "44.233.151.27", "34.211.200.85"]);
+app.set("trust proxy", "35.160.120.126", "44.233.151.27", "34.211.200.85");
 
 // Passando os parâmetros para a criação da sessão
 app.use(session({
